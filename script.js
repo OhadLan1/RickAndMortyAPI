@@ -8,6 +8,7 @@ const submitSearch = document.getElementById("submit");
 let list = [];
 searchInput.value = null;
 secondSearch.style.visibility = "hidden";
+searchResult.style.visibility = "hidden";
 
 searchInput.addEventListener("change", async () => {
   let result = await getListByInput();
@@ -40,9 +41,11 @@ function addNamesToSearchBar() {
   list.map((ele) => {
     secondSearch.innerHTML += `<option value="${ele.id}">${ele.name}</option>`;
   });
+  secondSearch.value = null;
 }
 
 secondSearch.addEventListener("change", () => {
+  searchResult.style.visibility = "visible";
   if (searchInput.value === "character") {
     charDate();
   } else if (searchInput.value === "location") {
@@ -55,12 +58,12 @@ function charDate() {
   let index = secondSearch.value - 1;
   let html = `<img src="${list[index].image}" class="card-img-top" alt="..." />
   <div class="card-body">
-    <h5 class="card-title">name: ${list[index].name}</h5>
+    <h5 class="card-title">name: <strong>${list[index].name}</strong></h5>
   </div>
   <ul class="list-group list-group-flush">
-    <li class="list-group-item">status: ${list[index].status}</li>
-    <li class="list-group-item">species: ${list[index].species}</li>
-    <li class="list-group-item">gender: ${list[index].gender}</li>
+    <li class="list-group-item">status: <strong>${list[index].status}</strong></li>
+    <li class="list-group-item">species: <strong>${list[index].species}</strong></li>
+    <li class="list-group-item">gender: <strong>${list[index].gender}</strong></li>
   </ul>
   `;
   searchResult.innerHTML = html;
@@ -83,25 +86,50 @@ async function locationDate() {
 </div>`;
   searchResult.innerHTML = html;
 }
-function episodeDate() {
-  console.log(secondSearch);
+async function episodeDate() {
+  let index = secondSearch.value - 1;
+  console.log(list[index]);
+  let html = `<div id="search-result" class="card" style="width: 18rem">
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item">name: <strong>${list[index].name}</strong></li>
+    <li class="list-group-item">air date: <strong>${
+      list[index].air_date
+    }</strong></li>
+    <li class="list-group-item">episode: <strong>${
+      list[index].episode
+    }</strong></li>
+  </ul>
+  <div>
+    characters: <br />
+    ${await fillResidents(list[index].characters)}
+  </div>
+</div>`;
+
+  searchResult.innerHTML = html;
 }
 
 async function fillResidents(arr) {
-  let char;
   let html = "";
   if (arr === [] || arr === null) {
     return "none";
   } else {
-    await arr.map(async (ele) => {
-      char = await fetch(ele);
-      console.log(ele);
-      char = await char.json();
-      console.log(char);
-      html += `<img src="${char.image}" class="card-img-top" alt="..."/>`;
-      console.log(html); // good
-    });
+    html = await getImage(arr);
     console.log(html); // output => ""
     return html;
   }
+}
+async function getImage(arr) {
+  let char;
+  let html = "";
+  let a = await arr.map(async (ele) => {
+    console.log(ele);
+    char = await fetch(ele);
+    char = await char.json();
+    console.log(char);
+    html += `<img src="${char.image}" class="card-img-top" alt="..."/>`;
+    
+    return html;
+  });
+  console.log(a); //  
+  return a.toString();
 }

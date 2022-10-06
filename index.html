@@ -18,8 +18,8 @@
       crossorigin="anonymous"
     ></script>
   </head>
-  <body>
-    <h1>Rick And Morty Data</h1>
+  <body class="d-flex flex-column align-items-center">
+    <h1 class="mt-2">Rick And Morty Data</h1>
     <div>
       <select id="search-bar">
         <option value="location">location</option>
@@ -27,21 +27,8 @@
         <option value="episode">episode</option>
       </select>
     </div>
-    <div><select id="second-search"></select></div>
+    <div class="mt-2"><select id="second-search"></select></div>
 
-    <div id="search-result" class="card" style="width: 18rem">
-      <div class="card-body">
-        <h5 class="card-title">name</h5>
-      </div>
-      <ul class="list-group list-group-flush">
-        <li class="list-group-item">type</li>
-        <li class="list-group-item">dimension</li>
-        
-      </ul>
-      <div>
-        residents: <br>
-        <img src="..." class="card-img-top" alt="..." />
-      </div>
-    </div>
+    <div id="search-result" class="card mt-2" style="width: 18rem"></div>
   </body>
 </html>
