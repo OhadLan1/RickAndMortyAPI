@@ -14,17 +14,14 @@ searchInput.addEventListener("change", async () => {
   let result = await getListByInput();
   getAll(result);
 });
-
 async function getListByInput() {
   const url = `${BASE_API}/${searchInput.value}`;
   const result = await (await fetch(url)).json();
   return result;
 }
-
 async function changeSearchTwo() {
   secondSearch.style.visibility = "visible";
 }
-
 async function getAll(result) {
   let a;
   list = [];
@@ -35,7 +32,6 @@ async function getAll(result) {
   changeSearchTwo();
   addNamesToSearchBar();
 }
-
 function addNamesToSearchBar() {
   secondSearch.innerHTML = "";
   list.map((ele) => {
@@ -43,7 +39,6 @@ function addNamesToSearchBar() {
   });
   secondSearch.value = null;
 }
-
 secondSearch.addEventListener("change", () => {
   searchResult.style.visibility = "visible";
   if (searchInput.value === "character") {
@@ -73,15 +68,15 @@ async function locationDate() {
 
   let html = `<div id="search-result" class="card" style="width: 18rem">
   <div class="card-body">
-    <h5 class="card-title">name: ${list[index].name}</h5>
+    <h5 class="card-title">name: <strong>${list[index].name}</strong></h5>
   </div>
   <ul class="list-group list-group-flush">
-    <li class="list-group-item">type: ${list[index].type}</li>
-    <li class="list-group-item">dimension: ${list[index].dimension}</li>
+    <li class="list-group-item">type: <strong>${list[index].type}</strong></li>
+    <li class="list-group-item">dimension: <strong>${list[index].dimension}</strong></li>
   </ul>
   <h6>residents: </h6>
-  <div>
-    ${await fillResidents(list[index].residents)}
+  <div class="d-flex justify-content-around align-items-center flex-wrap" >
+    ${await fillCharacter(list[index].residents)}
   </div>
 </div>`;
   searchResult.innerHTML = html;
@@ -99,37 +94,24 @@ async function episodeDate() {
       list[index].episode
     }</strong></li>
   </ul>
-  <div>
-    characters: <br />
-    ${await fillResidents(list[index].characters)}
+  characters: <br />
+  <div class="d-flex justify-content-around align-items-center flex-wrap" >
+    ${await fillCharacter(list[index].characters)}
   </div>
 </div>`;
 
   searchResult.innerHTML = html;
 }
-
-async function fillResidents(arr) {
+async function fillCharacter(arr) {
   let html = "";
-  if (arr === [] || arr === null) {
-    return "none";
-  } else {
-    html = await getImage(arr);
-    console.log(html); // output => ""
-    return html;
+  for (let obj of arr) {
+    html += await getSingleImage(obj);
   }
+  return html;
 }
-async function getImage(arr) {
+async function getSingleImage(ele) {
   let char;
-  let html = "";
-  let a = await arr.map(async (ele) => {
-    console.log(ele);
-    char = await fetch(ele);
-    char = await char.json();
-    console.log(char);
-    html += `<img src="${char.image}" class="card-img-top" alt="..."/>`;
-    
-    return html;
-  });
-  console.log(a); //  
-  return a.toString();
+  char = await fetch(ele);
+  char = await char.json();
+  return `<img src="${char.image}" class="card-img-top singleImg" alt="..."/>`;
 }
